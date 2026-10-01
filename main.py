@@ -8,7 +8,6 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.constants import ChatAction
 from telegram.ext import (
     Application, CallbackQueryHandler, CommandHandler, ContextTypes,
     MessageHandler, filters
@@ -133,7 +132,7 @@ async def quality_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     workdir = Path(tempfile.mkdtemp(prefix="ytmusic_"))
 
     try:
-        await context.bot.send_chat_action(chat_id=chat_id, action=ChatAction.RECORD_AUDIO)
+        await context.bot.send_chat_action(chat_id=chat_id, action="record_voice")
 
         info = await asyncio.to_thread(get_info, url)
 
@@ -191,7 +190,7 @@ async def quality_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 f"حجم الملف {size_mb:.1f}MB ويتجاوز الحد المسموح {MAX_FILE_MB}MB."
             )
 
-        await context.bot.send_chat_action(chat_id=chat_id, action=ChatAction.UPLOAD_AUDIO)
+        await context.bot.send_chat_action(chat_id=chat_id, action="upload_voice")
 
         with audio_file.open("rb") as f:
             await context.bot.send_audio(
